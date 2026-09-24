@@ -93,22 +93,35 @@ export const ProfessionalRegisterView: React.FC = () => {
 
     try {
       // 1. Comprobar si ese DNI ya existe en PostgreSQL
-      const dniCheck = await authService.checkDni(dni);
-      if (dniCheck.exists) {
-        setDniVerifiedData(null);
-        setDniValidado(false);
-        setIsManualNames(false);
-        candidatoForm.setValue('nombres', '');
-        candidatoForm.setValue('apellidos', '');
+      try {
+        const dniCheck = await authService.checkDni(dni);
+        if (dniCheck.exists) {
+          setDniVerifiedData(null);
+          setDniValidado(false);
+          setIsManualNames(false);
+          candidatoForm.setValue('nombres', '');
+          candidatoForm.setValue('apellidos', '');
 
-        await Swal.fire({
-          icon: 'warning',
-          title: 'DNI ya registrado',
-          text: 'Este DNI ya tiene una cuenta. Puedes iniciar sesión desde el enlace inferior.',
-          confirmButtonText: 'Aceptar',
-          confirmButtonColor: '#2563eb',
-        });
-        return;
+          await Swal.fire({
+            icon: 'warning',
+            title: 'DNI ya registrado',
+            text: 'Este DNI ya tiene una cuenta. Puedes iniciar sesión desde el enlace inferior.',
+            confirmButtonText: 'Aceptar',
+            confirmButtonColor: '#2563eb',
+          });
+          return;
+        }
+      } catch (checkErr: any) {
+        if (checkErr.response?.status === 409) {
+          await Swal.fire({
+            icon: 'warning',
+            title: 'DNI ya registrado',
+            text: 'Este DNI ya tiene una cuenta. Puedes iniciar sesión desde el enlace inferior.',
+            confirmButtonText: 'Aceptar',
+            confirmButtonColor: '#2563eb',
+          });
+          return;
+        }
       }
 
       // 2. Intentar validar identidad con RENIEC
@@ -148,17 +161,7 @@ export const ProfessionalRegisterView: React.FC = () => {
         return;
       }
     } catch (error: any) {
-      setDniVerifiedData(null);
-      setDniValidado(false);
-      setIsManualNames(false);
-      candidatoForm.setValue('nombres', '');
-      candidatoForm.setValue('apellidos', '');
-      await Swal.fire({
-        icon: 'error',
-        title: 'Error de conexión',
-        text: 'No se pudo conectar con el servidor local. Verifique que los servicios estén activos.',
-        confirmButtonColor: '#2563eb',
-      });
+      await activarIngresoManualDni('No se pudo validar el DNI de forma automática.');
     } finally {
       setIsValidatingDni(false);
     }
