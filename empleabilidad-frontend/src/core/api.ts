@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // By default we point to the API gateway or users service for auth
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_USUARIOS_API || 'http://localhost:8081/api', // usuarios-service as default for Auth
+  baseURL: import.meta.env.VITE_USUARIOS_API || 'https://usuarios-service-nnuq.onrender.com/api', // usuarios-service as default for Auth
   headers: {
     'Content-Type': 'application/json',
   },
@@ -10,12 +10,12 @@ export const api = axios.create({
 
 // For multiple services, we might define specific instances or use paths
 export const ofertasApi = axios.create({
-  baseURL: import.meta.env.VITE_OFERTAS_API || 'http://localhost:8082/api',
+  baseURL: import.meta.env.VITE_OFERTAS_API || 'https://ofertas-service-nnuq.onrender.com/api',
   headers: { 'Content-Type': 'application/json' },
 });
 
 export const postulacionesApi = axios.create({
-  baseURL: import.meta.env.VITE_POSTULACIONES_API || 'http://localhost:8083/api',
+  baseURL: import.meta.env.VITE_POSTULACIONES_API || 'https://postulaciones-service-nnuq.onrender.com/api',
   headers: { 'Content-Type': 'application/json' },
 });
 

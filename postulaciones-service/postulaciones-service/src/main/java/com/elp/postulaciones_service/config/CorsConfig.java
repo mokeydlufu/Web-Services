@@ -19,13 +19,8 @@ public class CorsConfig {
         // Permitir credenciales
         config.setAllowCredentials(true);
         
-        // Permitir orígenes específicos - FRONTEND
-        config.setAllowedOrigins(Arrays.asList(
-            "http://localhost:5173",
-            "http://localhost:5174",
-            "http://localhost:3000",
-            "http://localhost:4200"
-        ));
+        // Permitir orígenes (localhost y Render/Vercel)
+        config.addAllowedOriginPattern("*");
         
         // Permitir todos los headers (incluyendo Content-Type para multipart/form-data)
         config.addAllowedHeader("*");
