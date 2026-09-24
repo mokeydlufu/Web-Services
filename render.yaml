@@ -1,0 +1,94 @@
+services:
+  # 1. Microservicio de Usuarios
+  - type: web
+    name: usuarios-service
+    runtime: docker
+    dockerfilePath: usuarios-service/usuarios-service/Dockerfile
+    dockerContext: usuarios-service/usuarios-service
+    plan: free
+    region: oregon
+    envVars:
+      - key: PORT
+        value: 8081
+      - key: DB_URL
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: APISPERU_TOKEN
+        sync: false
+      - key: APISPERU_DNI_URL
+        value: https://peruapi.com/api/dni
+      - key: APISPERU_RUC_URL
+        value: https://peruapi.com/api/ruc
+
+  # 2. Microservicio de Ofertas
+  - type: web
+    name: ofertas-service
+    runtime: docker
+    dockerfilePath: ofertas-service/ofertas-service/Dockerfile
+    dockerContext: ofertas-service/ofertas-service
+    plan: free
+    region: oregon
+    envVars:
+      - key: PORT
+        value: 8082
+      - key: DB_URL
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: JOOBLE_API_KEY
+        sync: false
+
+  # 3. Microservicio de Postulaciones
+  - type: web
+    name: postulaciones-service
+    runtime: docker
+    dockerfilePath: postulaciones-service/postulaciones-service/Dockerfile
+    dockerContext: postulaciones-service/postulaciones-service
+    plan: free
+    region: oregon
+    envVars:
+      - key: PORT
+        value: 8083
+      - key: DB_URL
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: USUARIOS_SERVICE_URL
+        sync: false
+      - key: OFERTAS_SERVICE_URL
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-3.5-flash
+
+  # 4. Frontend Web (React + Vite SPA)
+  - type: web
+    name: empleabilidad-frontend
+    runtime: static
+    rootDir: empleabilidad-frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
