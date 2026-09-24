@@ -33,10 +33,10 @@ public class ConsultaDocumentoService {
     @Value("${apisperu.token:${apiperu.token:}}")
     private String apiToken;
 
-    @Value("${apisperu.dni-url:https://peruapi.com/api/dni}")
+    @Value("${apisperu.dni-url:https://api.apis.net.pe/v1/dni}")
     private String dniUrl;
 
-    @Value("${apisperu.ruc-url:https://peruapi.com/api/ruc}")
+    @Value("${apisperu.ruc-url:https://api.apis.net.pe/v1/ruc}")
     private String rucUrl;
 
     public ConsultaDocumentoService(RestTemplate restTemplate) {
@@ -70,30 +70,30 @@ public class ConsultaDocumentoService {
         
         String primaryBase = (dniUrl != null && !dniUrl.trim().isEmpty()) 
                 ? dniUrl.trim() 
-                : "https://peruapi.com/api/dni";
+                : "https://api.apis.net.pe/v1/dni";
         
-        String fallbackBase = primaryBase.contains("peruapi.com")
-                ? "https://api.apis.net.pe/v1/dni"
-                : "https://peruapi.com/api/dni";
+        String fallbackBase = primaryBase.contains("apis.net.pe")
+                ? "https://peruapi.com/api/dni"
+                : "https://api.apis.net.pe/v1/dni";
 
         log.info("Consultando DNI {} en servicio de identidad...", dni);
 
         try {
             return ejecutarConsultaDni(primaryBase, dni, token);
         } catch (Exception e) {
-            log.info("Consulta principal para DNI {} no obtuvo resultado ({}). Intentando padrón alternativo...", 
+            log.info("Consulta principal para DNI {} no obtuvo resultado ({}). Intentando respaldo...", 
                     dni, e.getMessage());
             
-            // 1. Intento con padrón alternativo (eldni.com)
+            // 1. Intento con URL de respaldo directo
+            try {
+                return ejecutarConsultaDni(fallbackBase, dni, token);
+            } catch (Exception ignored) {
+            }
+
+            // 2. Intento con padrón alternativo (eldni.com)
             DniConsultaResponseDTO fallbackDto = consultarDniEnPadronAlternativo(dni);
             if (fallbackDto != null) {
                 return fallbackDto;
-            }
-
-            // 2. Intento con apis.net.pe como respaldo
-            try {
-                return ejecutarConsultaDni("https://api.apis.net.pe/v1/dni", dni, token);
-            } catch (Exception ignored) {
             }
 
             if (e instanceof DocumentoNoEncontradoException) {
@@ -239,11 +239,11 @@ public class ConsultaDocumentoService {
         
         String primaryBase = (rucUrl != null && !rucUrl.trim().isEmpty()) 
                 ? rucUrl.trim() 
-                : "https://peruapi.com/api/ruc";
+                : "https://api.apis.net.pe/v1/ruc";
 
-        String fallbackBase = primaryBase.contains("peruapi.com")
-                ? "https://api.apis.net.pe/v1/ruc"
-                : "https://peruapi.com/api/ruc";
+        String fallbackBase = primaryBase.contains("apis.net.pe")
+                ? "https://peruapi.com/api/ruc"
+                : "https://api.apis.net.pe/v1/ruc";
 
         log.info("Consultando RUC {} en servicio SUNAT...", ruc);
 

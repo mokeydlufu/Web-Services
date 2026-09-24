@@ -11,8 +11,8 @@ public class ApisPeruConfig {
     @Bean
     public RestTemplate restTemplate() {
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
-        factory.setConnectTimeout(10000);
-        factory.setReadTimeout(15000);
+        factory.setConnectTimeout(4000);
+        factory.setReadTimeout(5000);
         return new RestTemplate(factory);
     }
 }
