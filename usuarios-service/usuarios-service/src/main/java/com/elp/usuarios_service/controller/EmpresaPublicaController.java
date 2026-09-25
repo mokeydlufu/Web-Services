@@ -27,7 +27,7 @@ public class EmpresaPublicaController {
             Pageable pageable) {
 
         Page<Empresa> empresas = empresaRepository.findAll(
-                EmpresaSpecification.conFiltros(q, ubicacion, industria, "VERIFICADA"), pageable);
+                EmpresaSpecification.conFiltros(q, ubicacion, industria, "APROBADA"), pageable);
 
         Page<EmpresaPublicaDto> dtos = empresas.map(this::mapToPublicDto);
         return ResponseEntity.ok(dtos);
@@ -36,7 +36,7 @@ public class EmpresaPublicaController {
     @GetMapping("/{id}")
     public ResponseEntity<EmpresaPublicaDto> obtenerEmpresaPorId(@PathVariable UUID id) {
         return empresaRepository.findById(id)
-                .filter(e -> "VERIFICADA".equals(e.getEstadoVerificacion()))
+                .filter(e -> "VERIFICADA".equalsIgnoreCase(e.getEstadoVerificacion()) || "APROBADA".equalsIgnoreCase(e.getEstadoVerificacion()))
                 .map(e -> ResponseEntity.ok(mapToPublicDto(e)))
                 .orElse(ResponseEntity.notFound().build());
     }

@@ -14,7 +14,11 @@ public class EmpresaSpecification {
             List<Predicate> predicates = new ArrayList<>();
 
             if (estadoVerificacion != null && !estadoVerificacion.trim().isEmpty()) {
-                predicates.add(cb.equal(root.get("estadoVerificacion"), estadoVerificacion));
+                if ("VERIFICADA".equalsIgnoreCase(estadoVerificacion) || "APROBADA".equalsIgnoreCase(estadoVerificacion)) {
+                    predicates.add(root.get("estadoVerificacion").in(java.util.Arrays.asList("VERIFICADA", "APROBADA")));
+                } else {
+                    predicates.add(cb.equal(root.get("estadoVerificacion"), estadoVerificacion));
+                }
             }
 
             if (q != null && !q.trim().isEmpty()) {
@@ -25,7 +29,7 @@ public class EmpresaSpecification {
                 predicates.add(cb.or(rzPredicate, ncPredicate, indPredicate));
             }
 
-            if (ubicacion != null && !ubicacion.trim().isEmpty() && !ubicacion.equalsIgnoreCase("Peru")) {
+            if (ubicacion != null && !ubicacion.trim().isEmpty() && !ubicacion.equalsIgnoreCase("Peru") && !ubicacion.equalsIgnoreCase("TODAS")) {
                 predicates.add(cb.like(cb.lower(root.get("ubicacion")), "%" + ubicacion.toLowerCase() + "%"));
             }
 
