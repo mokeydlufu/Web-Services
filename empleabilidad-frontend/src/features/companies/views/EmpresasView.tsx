@@ -32,11 +32,15 @@ export const EmpresasView: React.FC = () => {
       setEmpresas(data.content);
       setTotalPages(data.totalPages);
 
-      // Cargar conteos
-      if (data.content.length > 0) {
-        const ids = data.content.map(e => e.id);
-        const conteosData = await getConteoOfertas(ids);
-        setConteos(conteosData);
+      // Cargar conteos de ofertas de forma segura
+      if (data && data.content && data.content.length > 0) {
+        try {
+          const ids = data.content.map(e => e.id);
+          const conteosData = await getConteoOfertas(ids);
+          setConteos(conteosData || {});
+        } catch (conteoErr) {
+          console.warn('No se pudo cargar el conteo de ofertas por empresa:', conteoErr);
+        }
       }
     } catch (error) {
       console.error('Error fetching empresas:', error);
