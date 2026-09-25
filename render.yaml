@@ -7,6 +7,13 @@ services:
     dockerContext: usuarios-service/usuarios-service
     plan: free
     region: oregon
+    envVars:
+      - key: APISPERU_TOKEN
+        value: sk_19762.Hy3Zw5B6GCkZh4ouX6ppElumGMTYlFS8
+      - key: APISPERU_DNI_URL
+        value: https://api.apis.net.pe/v1/dni
+      - key: APISPERU_RUC_URL
+        value: https://api.apis.net.pe/v1/ruc
 
   # 2. Microservicio de Ofertas
   - type: web

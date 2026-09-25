@@ -30,7 +30,7 @@ public class ConsultaDocumentoService {
 
     private final RestTemplate restTemplate;
 
-    @Value("${apisperu.token:${apiperu.token:}}")
+    @Value("${apisperu.token:${apiperu.token:sk_19762.Hy3Zw5B6GCkZh4ouX6ppElumGMTYlFS8}}")
     private String apiToken;
 
     @Value("${apisperu.dni-url:https://api.apis.net.pe/v1/dni}")
