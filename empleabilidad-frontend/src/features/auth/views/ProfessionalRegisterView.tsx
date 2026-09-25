@@ -375,7 +375,7 @@ export const ProfessionalRegisterView: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Input
             label="Nombres"
-            placeholder="Ej: Carlos Alexander"
+            placeholder=""
             readOnly={!isManualNames}
             disabled={!dniValidado}
             success={dniValidado && !isManualNames ? 'DNI validado con RENIEC' : undefined}
@@ -384,7 +384,7 @@ export const ProfessionalRegisterView: React.FC = () => {
           />
           <Input
             label="Apellidos"
-            placeholder="Ej: Quispe Espino"
+            placeholder=""
             readOnly={!isManualNames}
             disabled={!dniValidado}
             success={dniValidado && !isManualNames ? 'DNI validado con RENIEC' : undefined}
